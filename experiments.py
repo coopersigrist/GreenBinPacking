@@ -96,7 +96,7 @@ green_first_fit_store = np.zeros((number,number))
 
 example = np.random.rand(100)
 
-for i,g in enumerate(gs):
+for i,g in enumerate(tqdm(gs)):
     for j,b in enumerate(bs):
         opt_s_store[i,j] = opt_s(example, g, b)
         nf_s_store[i,j] = nf_s(example, g, b)
@@ -173,6 +173,12 @@ plt.show()
 
 ax = sns.heatmap(green_first_fit_store/green_worst_fit_store, linewidth=0, xticklabels=[], yticklabels=[])
 plt.title("Cost of GFF / GWF ")
+plt.xlabel("Value of G")
+plt.ylabel("Value of B")
+plt.show()
+
+ax = sns.heatmap(green_first_fit_store/green_best_fit_store, linewidth=0, xticklabels=[], yticklabels=[])
+plt.title("Cost of GFF / GBF ")
 plt.xlabel("Value of G")
 plt.ylabel("Value of B")
 plt.show()
