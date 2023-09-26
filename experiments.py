@@ -163,7 +163,7 @@ def worst_fit(arr,g,b):
     return cost
 
 number = 100
-bmax = 30
+bmax = 10
 gmax = 1
 gs = np.round(np.arange(0, gmax, gmax/number), 4)
 bs = np.round(np.arange(0, bmax, bmax/number), 4)
@@ -293,7 +293,7 @@ plt.show()
 # plt.xlabel("Value of G")
 # plt.ylabel("Value of B")
 # # plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
-# # plt.plot((number/(bmax * gs)),  number*gs + 1, label="G = 2B" )
+# # plt.plot((number/(bmax * gs)),  number*gs + 1, label="G = Bmax - 1/B" )
 # # plt.legend()
 # plt.show()
 
