@@ -17,13 +17,13 @@ def opt_s(arr, g, b):
     
 def nf_s(arr, g, b):
     s = np.sum(arr)
-    threshold = min(g + 1/b, 1)
+    threshold = min(g + (1/b), 1)
     return (3*s)/threshold
 
 def green_next_fit(arr, g, b):
     curr = 0
     cost = 1
-    threshold = min(g + 1/b, 1)
+    threshold = min(g + (1/b), 1)
     for item in arr:
         if curr + item > threshold:
             cost += max((curr - g), 0)*b + 1
@@ -36,7 +36,7 @@ def green_next_fit(arr, g, b):
 def green_worst_fit(arr,g,b):
     cost = 1
     bins = [0]
-    threshold = min(g + 1/b, 1)
+    threshold = min(g + (1/b), 1)
     for item in arr:
         mini = min(bins)
         if mini + item <= threshold:
@@ -53,7 +53,7 @@ def green_worst_fit(arr,g,b):
 def green_best_fit(arr,g,b):
     cost = 1
     bins = [0]
-    threshold = min(g + 1/b, 1)
+    threshold = min(g + (1/b), 1)
     for item in arr:
         allowed = list(filter(lambda n: n <= (threshold - item), bins))
         if len(allowed) == 0:
@@ -70,7 +70,7 @@ def green_best_fit(arr,g,b):
 def green_first_fit(arr,g,b):
     cost = 1
     bins = [0]
-    threshold = min(g + 1/b, 1)
+    threshold = min(g + (1/b), 1)
     for item in arr:
         allowed = list(filter(lambda n: n <= (threshold - item), bins))
         if len(allowed) == 0:
@@ -185,6 +185,8 @@ gb = np.zeros((number**2))
 
 whose_best = np.zeros((number,number))
 best_alg_store = np.zeros((number,number))
+best_trad_alg_store = np.zeros((number,number))
+best_green_alg_store = np.zeros((number,number))
 
 best_fit_cases = [[],[]]
 green_best_fit_cases = [[], []]
@@ -192,7 +194,7 @@ green_best_fit_cases = [[], []]
 for i,g in enumerate(tqdm(gs)):
     for j,b in enumerate(bs):
         example = np.random.rand(100)
-        # example *= min(1, g + (1/b))
+        example *= min(1, g + (1/b))
         opt_s_store[i,j] = opt_s(example, g, b)
         nf_s_store[i,j] = nf_s(example, g, b)
         green_next_fit_store[i,j] = green_next_fit(example, g, b)
@@ -205,10 +207,14 @@ for i,g in enumerate(tqdm(gs)):
         best_fit_store[i,j] = best_fit(example, g, b)
         first_fit_store[i,j] = first_fit(example, g, b)
 
+        green_costs = np.array([green_next_fit_store[i,j], green_worst_fit_store[i,j], green_best_fit_store[i,j], green_first_fit_store[i,j]])
+        trad_costs = np.array([next_fit_store[i,j], worst_fit_store[i,j], best_fit_store[i,j], first_fit_store[i,j]])
         all_costs = np.array([green_next_fit_store[i,j], green_worst_fit_store[i,j], green_best_fit_store[i,j], green_first_fit_store[i,j], next_fit_store[i,j], worst_fit_store[i,j], best_fit_store[i,j], first_fit_store[i,j] ])
 
         whose_best[i,j] = np.argmin(all_costs)
         best_alg_store[i,j] = np.min(all_costs)
+        best_green_alg_store[i,j] = np.min(green_costs)
+        best_trad_alg_store[i,j] = np.min(trad_costs)
 
         # if best_fit_store[i,j] < green_best_fit_store[i,j]:
         #     best_fit_cases[0].append(b * g)
@@ -301,7 +307,7 @@ plt.show()
 # plt.xlabel("Value of B")
 # plt.ylabel("Value of G")
 # # plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
-# # plt.plot((number/(bmax * gs)),  number*gs + 1, label="G = Bmax - 1/B" )
+# # plt.plot((number/(bmax * gs)),  number*gs + 1, label="G = 1 - 1/B" )
 # # plt.legend()
 # plt.show()
 
@@ -325,11 +331,20 @@ plt.title("Alg with minimum value")
 plt.xlabel("Value of B")
 plt.ylabel("Value of G")
 plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
-plt.plot((number/(bmax * gs)),  number*gs + 1, label="G = Bmax - 1/B" )
+plt.plot((number/(bmax * gs)),  number*gs + 1, label="G = 1 - 1/B" )
 plt.legend()
 plt.show()
 
 # ## DIFFERENCE GRAPHS ##
+
+ax = sns.heatmap(best_trad_alg_store - best_green_alg_store, linewidth=0, xticklabels=[], yticklabels=[])
+plt.title("Best Trad cost - best green cost ")
+plt.xlabel("Value of B")
+plt.ylabel("Value of G")
+plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
+plt.plot((number/(bmax * gs)),  number*gs + 1, label="G = 1 - 1/B" )
+plt.legend()
+plt.show()
 
 # plt.scatter(gb, alg_store[8] - alg_store[2], label="BF - GBF")
 # plt.scatter(gb, alg_store[9] - alg_store[3], label="FF - GFF" )
@@ -345,11 +360,11 @@ plt.show()
 
 # plt.subplot(1, 3, 1)
 
-# ax = sns.heatmap(opt_s_store, linewidth=0, xticklabels=[], yticklabels=[], vmin=vmin, vmax=vmax, cbar=False)
-# plt.title("values of OPT(S) for varied G and B")
+# ax = sns.heatmap(green_next_fit_store/nf_s_store, linewidth=0, xticklabels=[], yticklabels=[])
+# plt.title("GNF/NF(S) for varied G and B")
 # plt.xlabel("Value of B")
 # plt.ylabel("Value of G")
-
+# plt.show()
 
 
 # plt.subplot(1, 3, 2)
