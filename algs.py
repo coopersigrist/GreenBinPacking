@@ -1,3 +1,11 @@
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from tqdm import tqdm
+import pandas as pd
+import math
+from matplotlib.colors import LinearSegmentedColormap
+
 def opt_s(arr, g, b):
     s = np.sum(arr)
     if g*b >= 1:
@@ -18,7 +26,6 @@ def gaaf_s(arr, g, b):
     else:
         return opt_s(arr, g, b)
     
-
 def green_next_fit(arr, g, b):
     curr = 0
     cost = 1
@@ -141,7 +148,6 @@ def next_fit(arr, g, b, threshold=1):
     
     return cost
 
-
 def gamma(i, add_one_denom=False):
 
     if i == -1:
@@ -159,7 +165,6 @@ def gamma(i, add_one_denom=False):
     else:
         return  gamma(i-1)**2 / (gamma(i-1) + 1)
     
-
 def sum_gamma(stop, add_one_denom=False):
     sum = 0
 
@@ -192,7 +197,6 @@ def combined_cr_UB(g,b):
         return 1.7 * g * (3/17 * (1-g)*b + 1)
     else:
         return 2*g/(g + 1/b)
-
 
 def Har(arr, g, b, max_i=100):
     if g == 1:
@@ -230,7 +234,6 @@ def Har(arr, g, b, max_i=100):
 
     return cost, bins
 
-
 def add_item_har(bin, item, g, b):
     cost = 0
     if bin[0] == 0:
@@ -255,10 +258,10 @@ def worst_fit(arr,g,b, threshold=1):
     cost = 1
     bins = [0]
 
-    if g*b <= 1:
-        threshold = 1
-    else:
-        threshold = g
+    # if g*b <= 1:
+    #     threshold = 1
+    # else:
+    #     threshold = g
     for item in arr:
         mini = min(bins)
         if mini + item <= threshold:
@@ -271,3 +274,30 @@ def worst_fit(arr,g,b, threshold=1):
         cost += max(bin - g, 0) * b
     
     return cost
+
+def Ghar(arr, g, b, tau, imax):
+
+    if g*b < 1:
+        return 1
+
+    bins = np.zeros((imax+1, 3)) # each bin is a truple of total cost of i-type bins, count of items in current opened i-type bin, and amount filled
+    for item in arr:
+        i = 0
+        while item < (g + tau) / (i + 1) and i < imax : 
+            i += 1
+        bins[i][1] += 1 # increase count of number of items in bin
+        bins[i][2] += item # add item to bin
+        if  bins[i][1] >= i:
+            bins[i][0] += 1 + max(bins[i][2] - g, 0)*b # adds the cost of the filled bin to total
+            bins[i][1] = 0 # resets count of bin
+            bins[i][2] = 0 # resets amount filled
+    
+
+    # Adds up all costs accrude (by different i ranges) and adds the cost of currently opened bin too
+    total_cost = 0
+    for bin in bins:
+        total_cost += bin[0]
+        if bin[1] > 0:
+            total_cost += 1 + max(bin[2] - g, 0)*b
+    
+    return total_cost

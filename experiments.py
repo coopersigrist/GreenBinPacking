@@ -9,7 +9,7 @@ import cooper_ghar
 from algs import *
 
 number = 100
-bmax = 10
+bmax = 50
 gmax = 1
 
 gs = np.round(np.arange(gmax, 0, -gmax/number), 4) + 0.01
@@ -34,6 +34,7 @@ first_fit_store = np.zeros((number,number))
 
 HAR_store = np.zeros((number, number))
 GHAR_store = np.zeros((number, number))
+GHAR_CR_store = np.zeros((number, number))
 
 alg_store = np.zeros((10, number**2))
 gb = np.zeros((number**2))
@@ -67,7 +68,10 @@ for i,g in enumerate(tqdm(gs)):
         
         # combined_cr_UB_store[i,j] = combined_cr_UB(g,b)
         # HAR_store[i,j], _ = Har(example, g, b, max_i=100)
-        GHAR_store[i,j] = cooper_ghar.ghar_CR_calc(g,b,1/b,8, 15)[0]
+        # GHAR_CR_store[i,j] = cooper_ghar.ghar_CR_calc(g,b,1/b,8, 15)[0]
+        if g*b > 1:
+            GHAR_store[i,j] = Ghar(example, g, b, 1/b, 100)
+            worst_fit_store[i,j] = worst_fit(example, g, b, threshold=g+1/b)
 
         # opt_s_store[i,j] = opt_s(example, g, b)
         # gaaf_s_store[i,j] = gaaf_s(example, g, b)
@@ -175,7 +179,23 @@ for i,g in enumerate(tqdm(gs)):
     # plt.show()
 
 ax = sns.heatmap(GHAR_store, linewidth=0, xticklabels=[], yticklabels=[])
-plt.title("CR of GHAR (mimi)")
+plt.title("Empirical GHAR cost")
+plt.xlabel("Value of B")
+plt.ylabel("Value of G")
+plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
+plt.legend()
+plt.show()
+
+ax = sns.heatmap(worst_fit_store, linewidth=0, xticklabels=[], yticklabels=[])
+plt.title("Empirical worst fit with threshold = G + 1/b")
+plt.xlabel("Value of B")
+plt.ylabel("Value of G")
+plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
+plt.legend()
+plt.show()
+
+ax = sns.heatmap(GHAR_store - worst_fit_store, linewidth=0, xticklabels=[], yticklabels=[])
+plt.title("Empirical GHAR - Worst fit cost")
 plt.xlabel("Value of B")
 plt.ylabel("Value of G")
 plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
