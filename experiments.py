@@ -58,20 +58,45 @@ combined_cr_UB_store = np.zeros((number,number))
 best_fit_cases = [[],[]]
 green_best_fit_cases = [[], []]
 
+count = 0
+value = 0
+g=1/5
+b=6
+GHAR_CR_store_val = np.zeros((number, number))
+for n in range(1,number):
+    for imax in range(1,number):
+
+        for i,g in enumerate(tqdm(gs)):
+            for j,b in enumerate(bs):
+                ghar = cooper_ghar.ghar_CR_calc(g,b,1/b,n, imax)[0]
+                GHAR_CR_store_val [i,j]= ghar
+
+        value = np.max(GHAR_CR_store_val)
+        GHAR_CR_store[n,imax] = value
+    
+
+ax = sns.heatmap(GHAR_CR_store, linewidth=0, xticklabels=[], yticklabels=[])
+plt.title("Max GHAR CR for Varied G and Beta")
+plt.xlabel("Value of imax")
+plt.ylabel("Value of N")
+# plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
+plt.legend()
+plt.show()
 
 
-for i,g in enumerate(tqdm(gs)):
-    for j,b in enumerate(bs):
-        example = np.random.rand(100)
-        if g*b >= 1:
-            example *= g
+
+# for i,g in enumerate(tqdm(gs)):
+#     for j,b in enumerate(bs):
+#         example = np.random.rand(100)
+#         if g*b >= 1:
+#             example *= g
         
         # combined_cr_UB_store[i,j] = combined_cr_UB(g,b)
         # HAR_store[i,j], _ = Har(example, g, b, max_i=100)
         # GHAR_CR_store[i,j] = cooper_ghar.ghar_CR_calc(g,b,1/b,8, 15)[0]
-        if g*b > 1:
-            GHAR_store[i,j] = Ghar(example, g, b, 1/b, 100)
-            worst_fit_store[i,j] = worst_fit(example, g, b, threshold=g+1/b)
+        # if g*b > 1:
+        #     GHAR_store[i,j] = Ghar(example, g, b, 1/b, 100)
+        #     worst_fit_store[i,j] = worst_fit(example, g, b, threshold=g+1/b)
 
         # opt_s_store[i,j] = opt_s(example, g, b)
         # gaaf_s_store[i,j] = gaaf_s(example, g, b)
@@ -178,29 +203,29 @@ for i,g in enumerate(tqdm(gs)):
     # plt.legend()
     # plt.show()
 
-ax = sns.heatmap(GHAR_store, linewidth=0, xticklabels=[], yticklabels=[])
-plt.title("Empirical GHAR cost")
-plt.xlabel("Value of B")
-plt.ylabel("Value of G")
-plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
-plt.legend()
-plt.show()
+# ax = sns.heatmap(GHAR_store, linewidth=0, xticklabels=[], yticklabels=[])
+# plt.title("Empirical GHAR cost")
+# plt.xlabel("Value of B")
+# plt.ylabel("Value of G")
+# plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
+# plt.legend()
+# plt.show()
 
-ax = sns.heatmap(worst_fit_store, linewidth=0, xticklabels=[], yticklabels=[])
-plt.title("Empirical worst fit with threshold = G + 1/b")
-plt.xlabel("Value of B")
-plt.ylabel("Value of G")
-plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
-plt.legend()
-plt.show()
+# ax = sns.heatmap(worst_fit_store, linewidth=0, xticklabels=[], yticklabels=[])
+# plt.title("Empirical worst fit with threshold = G + 1/b")
+# plt.xlabel("Value of B")
+# plt.ylabel("Value of G")
+# plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
+# plt.legend()
+# plt.show()
 
-ax = sns.heatmap(GHAR_store - worst_fit_store, linewidth=0, xticklabels=[], yticklabels=[])
-plt.title("Empirical GHAR - Worst fit cost")
-plt.xlabel("Value of B")
-plt.ylabel("Value of G")
-plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
-plt.legend()
-plt.show()
+# ax = sns.heatmap(GHAR_store - worst_fit_store, linewidth=0, xticklabels=[], yticklabels=[])
+# plt.title("Empirical GHAR - Worst fit cost")
+# plt.xlabel("Value of B")
+# plt.ylabel("Value of G")
+# plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
+# plt.legend()
+# plt.show()
 
 # ax = sns.heatmap(HAR_store/opt_s_store, linewidth=0, xticklabels=[], yticklabels=[])
 # plt.title("CR of HAR")
