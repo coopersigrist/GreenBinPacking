@@ -63,6 +63,25 @@ combined_cr_UB_store = np.zeros((number,number))
 best_fit_cases = [[],[]]
 green_best_fit_cases = [[], []]
 
+g=1/5
+b=6
+for n in range(1,number):
+    for imax in range(1,number):
+        GHAR_CR_store[n,imax] = cooper_ghar.ghar_CR_calc(g,b,1/b,imax,n)[0]
+
+ax = sns.heatmap(GHAR_CR_store, linewidth=0)
+plt.title("CR for n vs imax")
+plt.xlabel("Value of imax")
+# plt.xticks(axis_ticks)
+# ax.set_xticklabels(plot_bs)
+plt.ylabel("Value of n")
+# plt.yticks(axis_ticks)
+# ax.set_yticklabels(plot_gs)
+# plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
+plt.legend()
+plt.show()
+
+
 
 
 for i,g in enumerate(tqdm(gs)):
