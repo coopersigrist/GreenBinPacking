@@ -8,7 +8,7 @@ from matplotlib.colors import LinearSegmentedColormap
 import cooper_ghar
 from algs import *
 
-number = 100
+number = 7
 bmax = 50
 gmax = 1
 
@@ -63,16 +63,28 @@ value = 0
 g=1/5
 b=6
 GHAR_CR_store_val = np.zeros((number, number))
+GHAR_items = np.zeros((number,number))
+
 for n in range(1,number):
     for imax in range(1,number):
+        ghar = cooper_ghar.ghar_CR_calc(g,b,1/b, imax,n)[0]
+        # print(n)
+        # print(imax)
+        # print(ghar)
+        GHAR_CR_store [n,imax]= ghar
+        GHAR_items = cooper_ghar.ghar_CR_calc(g,b,1/b, imax,n)[1]
+print(GHAR_items)
+# for n in range(1,number):
+#     for imax in range(1,number):
 
-        for i,g in enumerate(tqdm(gs)):
-            for j,b in enumerate(bs):
-                ghar = cooper_ghar.ghar_CR_calc(g,b,1/b,n, imax)[0]
-                GHAR_CR_store_val [i,j]= ghar
-
-        value = np.max(GHAR_CR_store_val)
-        GHAR_CR_store[n,imax] = value
+#         for i,g in enumerate(tqdm(gs)):
+#             for j,b in enumerate(bs):
+#                 ghar = cooper_ghar.ghar_CR_calc(g,b,1/b, imax,n)[0]
+#                 GHAR_CR_store_val [i,j]= ghar
+#         print(GHAR_CR_store_val)
+#         value = np.max(GHAR_CR_store_val)
+#         print(value)
+#         GHAR_CR_store[n,imax] = value
     
 
 ax = sns.heatmap(GHAR_CR_store, linewidth=0, xticklabels=[], yticklabels=[])
@@ -83,6 +95,7 @@ plt.ylabel("Value of N")
 plt.legend()
 plt.show()
 
+print(GHAR_CR_store)
 
 
 # for i,g in enumerate(tqdm(gs)):
