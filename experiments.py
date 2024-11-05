@@ -12,8 +12,13 @@ number = 100
 bmax = 50
 gmax = 1
 
-gs = np.round(np.arange(gmax, 0, -gmax/number), 4) + 0.01
-bs = np.round(np.arange(0, bmax, bmax/number), 4) + 0.01
+gs = np.round(np.arange(gmax, 0, -gmax/number), 4) 
+bs = np.round(np.arange(0, bmax, bmax/number), 4) 
+
+plot_bs = np.round(np.arange(0, bmax* 11/10, bmax/10),1)
+plot_gs = np.round(np.arange(gmax, -gmax/10, -gmax/10),1)
+
+axis_ticks = np.arange(0, number*11/10, number/10)
 
 
 num_threshs = 100
@@ -178,29 +183,33 @@ for i,g in enumerate(tqdm(gs)):
     # plt.legend()
     # plt.show()
 
-ax = sns.heatmap(GHAR_store, linewidth=0, xticklabels=[], yticklabels=[])
-plt.title("Empirical GHAR cost")
-plt.xlabel("Value of B")
-plt.ylabel("Value of G")
-plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
-plt.legend()
-plt.show()
+# ax = sns.heatmap(GHAR_store, linewidth=0, xticklabels=[], yticklabels=[])
+# plt.title("Empirical GHAR cost")
+# plt.xlabel("Value of B")
+# plt.ylabel("Value of G")
+# plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
+# plt.legend()
+# plt.show()
 
 ax = sns.heatmap(worst_fit_store, linewidth=0, xticklabels=[], yticklabels=[])
 plt.title("Empirical worst fit with threshold = G + 1/b")
 plt.xlabel("Value of B")
+plt.xticks(axis_ticks)
+ax.set_xticklabels(plot_bs)
 plt.ylabel("Value of G")
+plt.yticks(axis_ticks)
+ax.set_yticklabels(plot_gs)
 plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
 plt.legend()
 plt.show()
 
-ax = sns.heatmap(GHAR_store - worst_fit_store, linewidth=0, xticklabels=[], yticklabels=[])
-plt.title("Empirical GHAR - Worst fit cost")
-plt.xlabel("Value of B")
-plt.ylabel("Value of G")
-plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
-plt.legend()
-plt.show()
+# ax = sns.heatmap(GHAR_store - worst_fit_store, linewidth=0, xticklabels=[], yticklabels=[])
+# plt.title("Empirical GHAR - Worst fit cost")
+# plt.xlabel("Value of B")
+# plt.ylabel("Value of G")
+# plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
+# plt.legend()
+# plt.show()
 
 # ax = sns.heatmap(HAR_store/opt_s_store, linewidth=0, xticklabels=[], yticklabels=[])
 # plt.title("CR of HAR")
