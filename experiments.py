@@ -8,7 +8,7 @@ from matplotlib.colors import LinearSegmentedColormap
 import cooper_ghar
 from algs import *
 
-number = 100
+number = 3
 bmax = 50
 gmax = 1
 
@@ -63,32 +63,59 @@ combined_cr_UB_store = np.zeros((number,number))
 best_fit_cases = [[],[]]
 green_best_fit_cases = [[], []]
 
-g=1/5
-b=6
-for n in range(1,number):
-    for imax in range(1,number):
-        GHAR_CR_store[n,imax] = cooper_ghar.ghar_CR_calc(g,b,1/b,imax,n)[0]
+# for n in range(1,number):
+#     for imax in range(1,number):
+#         GHAR_CR_val = np.zeros((number,number))
+#         for i,g in enumerate(tqdm(gs)):
+#             for j,b in enumerate(bs):
+#                 if g*b > 1:
+#                     GHAR_CR_val[n,imax] = cooper_ghar.ghar_CR_calc(g,b,1/b,imax,n)[0]
+#         GHAR_CR_store[n,imax] = np.mean(GHAR_CR_val)
 
-ax = sns.heatmap(GHAR_CR_store, linewidth=0)
-plt.title("CR for n vs imax")
-plt.xlabel("Value of imax")
-# plt.xticks(axis_ticks)
-# ax.set_xticklabels(plot_bs)
-plt.ylabel("Value of n")
-# plt.yticks(axis_ticks)
-# ax.set_yticklabels(plot_gs)
-# plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
-plt.legend()
-plt.show()
+# ax = sns.heatmap(GHAR_CR_store, linewidth=0)
+# plt.title("Mean CR for n vs imax")
+# plt.xlabel("Value of imax")
+# # plt.xticks(axis_ticks)
+# # ax.set_xticklabels(plot_bs)
+# plt.ylabel("Value of n")
+# # plt.yticks(axis_ticks)
+# # ax.set_yticklabels(plot_gs)
+# # plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
+# plt.legend()
+# plt.show()
 
 
-
+costarr = []
+gval =[]
+bval = []
+# example = np.random.rand(100) #sample on the same distr
+example = np.random.zipf(1.4267, 100) 
+example = example / max(example)
 
 for i,g in enumerate(tqdm(gs)):
     for j,b in enumerate(bs):
         # example = np.random.rand(100) 
-        example = np.random.zipf(1.4267, 100) 
-        example = example / max(example)
+
+        cost = []
+        if g*b>1:
+            gval.append(g)
+            bval.append(b)
+            for imax in range(100):
+                    cost.append(Ghar(example,g,b,1/b,imax))
+            costarr.append(cost)
+for i,plots in enumerate(costarr):
+     plt.plot(plots,label="g/b ratio" + str(round(gval[i]/bval[i],3)))
+plt.title("GHAR Zipf - Cost vs imax")
+plt.ylabel("cost")
+plt.xlabel("imax")
+plt.legend()
+plt.show()
+
+for i,g in enumerate(tqdm(gs)):
+    for j,b in enumerate(bs):
+        example = np.random.rand(100) 
+        # example = np.random.zipf(1.4267, 100) 
+        # example = example / max(example)
         # if g*b >= 1:
         #     example *= g
         
@@ -195,53 +222,53 @@ for i,g in enumerate(tqdm(gs)):
     # plt.legend()
     # plt.show()
 
-ax = sns.heatmap(worst_fit_store, linewidth=0, xticklabels=[], yticklabels=[])
-plt.title("Empirical (Zipf) worst fit with threshold = G + 1/b ")
-plt.xlabel("Value of B")
-plt.xticks(axis_ticks)
-ax.set_xticklabels(plot_bs)
-plt.ylabel("Value of G")
-plt.yticks(axis_ticks)
-ax.set_yticklabels(plot_gs)
-plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
-plt.legend()
-plt.show()
+# ax = sns.heatmap(worst_fit_store, linewidth=0, xticklabels=[], yticklabels=[])
+# plt.title("Empirical (Zipf) worst fit with threshold = G + 1/b ")
+# plt.xlabel("Value of B")
+# plt.xticks(axis_ticks)
+# ax.set_xticklabels(plot_bs)
+# plt.ylabel("Value of G")
+# plt.yticks(axis_ticks)
+# ax.set_yticklabels(plot_gs)
+# plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
+# plt.legend()
+# plt.show()
 
-ax = sns.heatmap(GHAR_store, linewidth=0, xticklabels=[], yticklabels=[])
-plt.title("Empirical (Zipf) GHAR with threshold = G + 1/b")
-plt.xlabel("Value of B")
-plt.xticks(axis_ticks)
-ax.set_xticklabels(plot_bs)
-plt.ylabel("Value of G")
-plt.yticks(axis_ticks)
-ax.set_yticklabels(plot_gs)
-plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
-plt.legend()
-plt.show()
+# ax = sns.heatmap(GHAR_store, linewidth=0, xticklabels=[], yticklabels=[])
+# plt.title("Empirical (Zipf) GHAR with threshold = G + 1/b")
+# plt.xlabel("Value of B")
+# plt.xticks(axis_ticks)
+# ax.set_xticklabels(plot_bs)
+# plt.ylabel("Value of G")
+# plt.yticks(axis_ticks)
+# ax.set_yticklabels(plot_gs)
+# plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
+# plt.legend()
+# plt.show()
 
-ax = sns.heatmap(GHAR_store - worst_fit_store, linewidth=0, xticklabels=[], yticklabels=[])
-plt.title("Empirical (Zipf) GHAR - Worst fit cost")
-plt.xlabel("Value of B")
-plt.xticks(axis_ticks)
-ax.set_xticklabels(plot_bs)
-plt.ylabel("Value of G")
-plt.yticks(axis_ticks)
-ax.set_yticklabels(plot_gs)
-plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
-plt.legend()
-plt.show()
+# ax = sns.heatmap(GHAR_store - worst_fit_store, linewidth=0, xticklabels=[], yticklabels=[])
+# plt.title("Empirical (Zipf) GHAR - Worst fit cost")
+# plt.xlabel("Value of B")
+# plt.xticks(axis_ticks)
+# ax.set_xticklabels(plot_bs)
+# plt.ylabel("Value of G")
+# plt.yticks(axis_ticks)
+# ax.set_yticklabels(plot_gs)
+# plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
+# plt.legend()
+# plt.show()
 
-ax = sns.heatmap(GHAR_store > worst_fit_store, linewidth=0, xticklabels=[], yticklabels=[])
-plt.title("G, b pairs with Empirical (Zipf) GHAR > Worst fit cost")
-plt.xlabel("Value of B")
-plt.xticks(axis_ticks)
-ax.set_xticklabels(plot_bs)
-plt.ylabel("Value of G")
-plt.yticks(axis_ticks)
-ax.set_yticklabels(plot_gs)
-plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
-plt.legend()
-plt.show()
+# ax = sns.heatmap(GHAR_store > worst_fit_store, linewidth=0, xticklabels=[], yticklabels=[])
+# plt.title("G, b pairs with Empirical (Zipf) GHAR > Worst fit cost")
+# plt.xlabel("Value of B")
+# plt.xticks(axis_ticks)
+# ax.set_xticklabels(plot_bs)
+# plt.ylabel("Value of G")
+# plt.yticks(axis_ticks)
+# ax.set_yticklabels(plot_gs)
+# plt.plot((number/(bmax * gs)), number - number*gs - 1, label="G=1/B" )
+# plt.legend()
+# plt.show()
 
 
 # ax = sns.heatmap(HAR_store/opt_s_store, linewidth=0, xticklabels=[], yticklabels=[])
