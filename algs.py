@@ -93,10 +93,10 @@ def green_first_fit(arr,g,b):
 def best_fit(arr,g,b, threshold=1):
     cost = 1
     bins = [0]
-    if g*b <= 1:
-        threshold = 1
-    else:
-        threshold = g
+    # if g*b <= 1:
+    #     threshold = 1
+    # else:
+    #     threshold = g
     for item in arr:
         allowed = list(filter(lambda n: n <= (threshold - item), bins))
         if len(allowed) == 0:
@@ -115,10 +115,10 @@ def best_fit(arr,g,b, threshold=1):
 def first_fit(arr,g,b, threshold=1):
     cost = 1
     bins = [0]
-    if g*b <= 1:
-        threshold = 1
-    else:
-        threshold = g
+    # if g*b <= 1:
+    #     threshold = 1
+    # else:
+    #     threshold = g
     for item in arr:
         allowed = list(filter(lambda n: n <= (threshold - item), bins))
         if len(allowed) == 0:
@@ -135,10 +135,10 @@ def first_fit(arr,g,b, threshold=1):
 def next_fit(arr, g, b, threshold=1):
     curr = 1
     cost = 0
-    if g*b <= 1:
-        threshold = 1
-    else:
-        threshold = g
+    # if g*b <= 1:
+    #     threshold = 1
+    # else:
+    #     threshold = g
     for item in arr:
         if curr + item > threshold:
             cost += max((curr - g), 0)*b + 1

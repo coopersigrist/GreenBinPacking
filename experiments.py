@@ -46,9 +46,9 @@ green_best_fit_cases = [[], []]
 
 # for i,g in enumerate(tqdm(gs)):
 #     for j,b in enumerate(bs):
-#         # example = np.random.rand(100) 
-#         example = np.random.zipf(1.4267, 100) 
-#         example = example / max(example)
+#         example = np.random.rand(100) 
+#         # example = np.random.zipf(1.4267, 100) 
+#         # example = example / max(example)
 #         # if g*b >= 1:
 #         #     example *= g
         
@@ -76,28 +76,39 @@ green_best_fit_cases = [[], []]
 # g_b_heatmap(GHAR_CR_store - AAF_LB_CR_store, "GHAR CR - AAF LB CR for tau = 1/b", number=number, bmax=bmax, gs=gs)
 
 
-# SEPARATE EMPRIRICAL TEST #
+# SEPARATE EMPRIRICAL TEST (varying Taus) #
 
-example = np.random.rand(1000) 
-# example = np.random.zipf(1.4267, 1000) 
-# example = example / max(example)
-g_test = 0.6
-b_test = 5/2
+example = np.random.rand(2000) 
+# example = np.random.zipf(1.4267, 100000) 
+# example = min(example,1)
+g_test = 0.5
+b_test = 1/0.4
 wf_cost = []
+ff_cost = []
+nf_cost = []
+bf_cost = []
 ghar_crs = []
 aaf_lb_crs = []
 aaf_ub_crs = []
 ghar_cost = []
 
+
 test_range = np.arange(100*(1-g_test))/100
 
-for tau in test_range:
+cost_lb = [sum(example)/g_test] * len(test_range)
+
+for tau in tqdm(test_range):
     wf_cost.append(worst_fit(example, g_test, b_test, g_test + tau))
-    ghar_cost.append(Ghar(example, g_test, b_test, tau))
-    cr, choices = ghar_CR_calc(g_test, b_test, tau)
+    ff_cost.append(first_fit(example, g_test, b_test, g_test + tau))
+    bf_cost.append(best_fit(example, g_test, b_test, g_test + tau))
+    nf_cost.append(next_fit(example, g_test, b_test, g_test + tau))
+    ghar_cost.append(Ghar(example, g_test, b_test, tau, 5))
+    cr, choices = ghar_CR_calc(g_test, b_test, tau, 5, 4)
     ghar_crs.append(cr)
     aaf_lb_crs.append(AAF_LB_CR_calc(g_test, b_test, tau))
     aaf_ub_crs.append(AAF_UB_CR_calc(g_test, b_test, tau))
+
+    
 
 
 # PLOTTING FOR COMPARISON OF GHAR AND WF #
@@ -105,18 +116,28 @@ for tau in test_range:
 plt.plot(test_range, aaf_lb_crs, label="AAF LB by tau")
 plt.plot(test_range, aaf_ub_crs, label="AAF UB by tau")
 plt.plot(test_range, ghar_crs, label="best CR of GHAR for emirical sequence")
-plt.vlines(1/b_test, min(ghar_crs+aaf_lb_crs+aaf_ub_crs), max(ghar_crs+aaf_lb_crs+aaf_ub_crs), colors='red', label="tau = 1/b")
-plt.vlines(1/(g_test*b_test*b_test), min(ghar_crs+aaf_lb_crs+aaf_ub_crs), max(ghar_crs+aaf_lb_crs+aaf_ub_crs), colors='red', label="tau = 1/gb^2")
+
+_, _, ymin, ymax = plt.axis()
+
+plt.vlines(1/b_test, ymin, ymax, colors='black', linewidth=5, linestyle='dashed')
+plt.vlines(1/(g_test*b_test*b_test), ymin, ymax, colors='black', linewidth=5, linestyle='dashed')
 plt.legend()
 plt.xlabel("Tau")
 plt.ylabel("Competitive ratio")
 plt.title("CR over tau with g="+str(g_test)+" and b="+str(b_test))
 plt.show()
 
-plt.plot(test_range, wf_cost, label="empirical WF cost based on tau choice")
-plt.plot(test_range, ghar_cost, label="empirical GHAR cost based on tau choice")
-plt.vlines(1/b_test, min(wf_cost), max(wf_cost), colors='red')
-plt.vlines(1/(g_test*b_test*b_test), min(wf_cost), max(wf_cost), colors='red')
+plt.plot(test_range, wf_cost, label="Worst fit")
+plt.plot(test_range, ff_cost, label="First fit")
+plt.plot(test_range, ghar_cost, label="GHAR")
+plt.plot(test_range, bf_cost, label="Best fit")
+plt.plot(test_range, nf_cost, label="Next fit")
+# plt.plot(test_range, cost_lb, label="cost lower bound")
+
+_, _, ymin, ymax = plt.axis()
+
+plt.vlines(1/b_test, ymin, ymax, colors='black', linewidth=5, linestyle='dashed')
+plt.vlines(1/(g_test*b_test*b_test), ymin, ymax, colors='black', linewidth=5, linestyle='dashed')
 plt.title("Cost over tau with g="+str(g_test)+" and b="+str(b_test))
 plt.xlabel("Tau")
 plt.ylabel("Cost")
