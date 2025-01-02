@@ -275,7 +275,7 @@ def worst_fit(arr,g,b, threshold=1):
     
     return cost
 
-def Ghar(arr, g, b, tau, imax):
+def Ghar(arr, g, b, tau, imax=10):
 
     if g*b < 1:
         return 1
