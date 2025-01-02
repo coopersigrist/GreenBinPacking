@@ -188,16 +188,6 @@ def Har_CR(g, b):
 
     return numerator/denom 
 
-def combined_cr_UB(g,b):
-    if g*b < 1:
-        return Har_CR(g,b)
-    if g*b > 17/3:
-        return 1.7
-    if g + 1/b > 1:
-        return 1.7 * g * (3/17 * (1-g)*b + 1)
-    else:
-        return 2*g/(g + 1/b)
-
 def Har(arr, g, b, max_i=100):
     if g == 1:
         i_star = max_i
@@ -258,10 +248,6 @@ def worst_fit(arr,g,b, threshold=1):
     cost = 1
     bins = [0]
 
-    # if g*b <= 1:
-    #     threshold = 1
-    # else:
-    #     threshold = g
     for item in arr:
         mini = min(bins)
         if mini + item <= threshold:
