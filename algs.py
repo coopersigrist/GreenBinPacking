@@ -6,6 +6,7 @@ import pandas as pd
 import math
 from matplotlib.colors import LinearSegmentedColormap
 
+# Returns the OPT lower bound for a sequence based on its volume
 def opt_s(arr, g, b):
     s = np.sum(arr)
     if g*b >= 1:
@@ -110,15 +111,11 @@ def best_fit(arr,g,b, threshold=1):
     
     return cost
     
-    return cost
 
 def first_fit(arr,g,b, threshold=1):
     cost = 1
     bins = [0]
-    # if g*b <= 1:
-    #     threshold = 1
-    # else:
-    #     threshold = g
+    
     for item in arr:
         allowed = list(filter(lambda n: n <= (threshold - item), bins))
         if len(allowed) == 0:
@@ -133,19 +130,19 @@ def first_fit(arr,g,b, threshold=1):
     return cost
 
 def next_fit(arr, g, b, threshold=1):
-    curr = 1
+    curr = 0
     cost = 0
-    # if g*b <= 1:
-    #     threshold = 1
-    # else:
-    #     threshold = g
+
     for item in arr:
         if curr + item > threshold:
             cost += max((curr - g), 0)*b + 1
             curr = item
         else:
             curr += item
-    
+
+    #Add cost of final bin
+    cost += max((curr - g), 0)*b + 1
+
     return cost
 
 def gamma(i, add_one_denom=False):
@@ -194,10 +191,6 @@ def Har(arr, g, b, max_i=100):
     else:
         i_star = min(math.floor(g/(1-g)), max_i)
     cost = 0
-
-    print(i_star)
-    print(max_i)
-    print(i_star + max_i)
 
     bins = np.zeros((max_i + i_star, 3)) # Each bin is a tuple (weight, count, i)
     for i in range(1, max_i+1):
@@ -262,9 +255,6 @@ def worst_fit(arr,g,b, threshold=1):
     return cost
 
 def Ghar(arr, g, b, tau, imax=10):
-
-    if g*b < 1:
-        return 1
 
     bins = np.zeros((imax+1, 3)) # each bin is a truple of total cost of i-type bins, count of items in current opened i-type bin, and amount filled
     for item in arr:
