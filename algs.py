@@ -14,6 +14,14 @@ def opt_s(arr, g, b):
     else:
         return s + s*b*(1-g)
     
+def opt_smart(arr, g, b):
+    small = list(filter(lambda x: x <= g, arr))
+    large = list(filter(lambda x: x > g, arr))
+    s = np.sum(small)/g
+    l = list(map(lambda x: 1+b*(x-g), large))
+    return s + np.sum(l)
+
+    
 def nf_s(arr, g, b):
     s = np.sum(arr)
     threshold = min(g + (1/b), 1)
