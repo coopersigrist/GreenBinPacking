@@ -5,6 +5,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from itertools import cycle
+import random
 
 
 #
@@ -57,13 +58,15 @@ def aaf_cr_ub(b,g):
 def plot_small(gs, fn, filename = ""):
     lines = ["-","--","-.",":", (0, (5, 5))]
     line_cycles = cycle(lines)
+    colors = ['blue','orange','green','red','purple']
+    colors_cycle = cycle(colors)
     for g in gs:
         bs = np.linspace(1, 1/g, 500)
         res = []
         for b in bs:
             res.append(fn(b,g))
 
-        plt.plot(bs, res, label = f"G = {g}", linestyle = next(line_cycles), linewidth = 2.5)
+        plt.plot(bs, res, label = f"G = {g}", linestyle = next(line_cycles), color = next(colors_cycle), linewidth = 2.5)
     
     plt.xlabel("\u03B2", fontsize="15")
     plt.ylabel("Competitive Ratio", fontsize="15")
@@ -110,6 +113,116 @@ def plot_aaf(gs, filename=""):
         plt.show()
 
     plt.clf()
+
+def multiplot(data, filename = ""):
+    fig, axs = plt.subplots(2, 3, figsize=(10, 5))
+    lines = ["--","-.",":", (0, (1, 1, 3, 1)), (0, (2,2))]
+    colors = ['blue','orange','green','red','purple']
+    lw = 1
+    legend_fs = "7.5"
+    label_fs = "11"
+
+    ### Small G values
+    
+    #NF
+    line_cycles = cycle(lines)
+    colors_cycle = cycle(colors)
+    for g in [0.1, 0.2, 0.3, 0.4, 0.5]:
+        bs = np.linspace(1, 1/g, 250)
+        res = []
+        for b in bs:
+            res.append(nf_cr(b,g))
+        axs[0][0].plot(bs, res, label=f"G = {g}", linestyle = next(line_cycles), color = next(colors_cycle), linewidth = lw)
+        axs[0][0].legend(fontsize=legend_fs)
+        axs[0][0].set_xlabel("\u03B2", fontsize=label_fs)
+        axs[0][0].set_ylabel("Competitive Ratio", fontsize=label_fs)
+
+    line_cycles = cycle(lines)
+    colors_cycle = cycle(colors)
+    for g in [0.1, 0.2, 0.3, 0.4, 0.5]:
+        bs = np.linspace(1, 1/g, 250)
+        res = []
+        for b in bs:
+            res.append(wf_cr(b,g))
+        axs[0][1].plot(bs, res, label=f"G = {g}", linestyle = next(line_cycles), color = next(colors_cycle), linewidth = lw)
+        axs[0][1].legend(fontsize=legend_fs)
+        axs[0][1].set_xlabel("\u03B2", fontsize=label_fs)
+        axs[0][1].set_ylabel("Competitive Ratio", fontsize=label_fs)
+
+    line_cycles = cycle(lines)
+    colors_cycle = cycle(colors)
+    for g in [0.1, 0.2, 0.3, 0.4, 0.5]:
+        bs = np.linspace(1, 1/g, 250)
+        lb = []
+        ub = []
+        for b in bs:
+            lb.append(aaf_cr_lb(b,g))
+            ub.append(aaf_cr_ub(b,g))
+        c = next(colors_cycle)
+        axs[0][2].plot(bs, lb, label=f"LB: G = {g}", linestyle = next(line_cycles), color = c, linewidth = lw)
+        axs[0][2].plot(bs, ub, label=f"UB: G = {g}", linestyle = "-", color = c, linewidth = lw)
+        axs[0][2].legend(fontsize=legend_fs)
+        axs[0][2].set_xlabel("\u03B2", fontsize=label_fs)
+        axs[0][2].set_ylabel("Competitive Ratio", fontsize=label_fs)
+
+
+    axs[0][0].sharey(axs[0][1])
+    axs[0][1].sharey(axs[0][2])
+    plt.setp(axs[0][1].get_yticklabels(), visible=False)
+    plt.setp(axs[0][2].get_yticklabels(), visible=False)
+
+    # Large G values
+        
+    line_cycles = cycle(lines)
+    colors_cycle = cycle(colors)
+    for g in [0.55, 0.6, 0.65]:
+        bs = np.linspace(1, 1/g, 250)
+        res = []
+        for b in bs:
+            res.append(nf_cr(b,g))
+        axs[1][0].plot(bs, res, label=f"G = {g}", linestyle = next(line_cycles), color = next(colors_cycle), linewidth = lw)
+        axs[1][0].legend(fontsize=legend_fs, loc=4)
+        axs[1][0].set_xlabel("\u03B2", fontsize=label_fs)
+        axs[1][0].set_ylabel("Competitive Ratio", fontsize=label_fs)
+
+    line_cycles = cycle(lines)
+    colors_cycle = cycle(colors)
+    for g in [0.55, 0.6, 0.65]:
+        bs = np.linspace(1, 1/g, 250)
+        res = []
+        for b in bs:
+            res.append(wf_cr(b,g))
+        axs[1][1].plot(bs, res, label=f"G = {g}", linestyle = next(line_cycles), color = next(colors_cycle), linewidth = lw)
+        axs[1][1].legend(fontsize=legend_fs)
+        axs[1][1].set_xlabel("\u03B2", fontsize=label_fs)
+        axs[1][1].set_ylabel("Competitive Ratio", fontsize=label_fs)
+
+    line_cycles = cycle(lines)
+    colors_cycle = cycle(colors)
+    for g in [0.55, 0.6, 0.65]:
+        bs = np.linspace(1, 1/g, 250)
+        lb = []
+        ub = []
+        for b in bs:
+            lb.append(aaf_cr_lb(b,g))
+            ub.append(aaf_cr_ub(b,g))
+        c = next(colors_cycle)
+        axs[1][2].plot(bs, lb, label=f"LB: G = {g}", linestyle = next(line_cycles), color = c, linewidth = lw)
+        axs[1][2].plot(bs, ub, label=f"UB: G = {g}", linestyle = "-", color = c, linewidth = lw)
+        axs[1][2].legend(fontsize=legend_fs)
+        axs[1][2].set_xlabel("\u03B2", fontsize=label_fs)
+        axs[1][2].set_ylabel("Competitive Ratio", fontsize=label_fs)
+
+    axs[1][0].sharey(axs[1][1])
+    axs[1][1].sharey(axs[1][2])
+    plt.setp(axs[1][1].get_yticklabels(), visible=False)
+    plt.setp(axs[1][2].get_yticklabels(), visible=False)
+
+    plt.subplots_adjust(hspace= 0.28)
+    plt.tight_layout(rect=[0, 0, 1, 1])
+    plt.savefig("./Plots/CompetitiveRatio/bestCR_gb<1/multiplot.png",dpi=300)
+    plt.clf()
+
 
 #
 # BG > 1
@@ -172,6 +285,7 @@ def plot_5(filename=""):
 # plot_aaf([0.1,0.2,0.3,0.4,0.5], "aaf_small_g")
 # plot_aaf([0.5, 0.6, 0.65], "aaf_large_g")
 
+multiplot("hi")
 
 # Fig 5
-plot_5('bestCR_gb>1')
+# plot_5('bestCR_gb>1')

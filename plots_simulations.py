@@ -169,7 +169,7 @@ def empirical_tau(b,g, tMax, nT, nS, filename="", plot=True, source="Unif"):
         plt.axvline(x=1/(2*b), color = "black", ls='-', lw = 0.5)
         plt.axvline(x=tHat, color = "black", ls='-', lw = 0.5)
 
-        plt.plot(ts, nfCost, label = "TNF", linestyle = "-", color="tab:grey")
+        plt.plot(ts, nfCost, label = "TNF$", linestyle = "-", color="tab:grey")
         plt.plot(ts, wfCost, label = "TWF", linestyle = "--", color="tab:red")
         plt.plot(ts, ffCost, label = "TFF", linestyle = ":", color="tab:green")
         plt.plot(ts, bfCost, label = "TBF", linestyle = "-.", color="tab:blue")
@@ -343,11 +343,11 @@ def multiplot_compareThreshold(data, bs, filename, share_Y=False):
     
     mpl.rcParams['lines.linewidth'] = 2
     # plot 1
-    axs[0].plot(bs, data[0][0], label = "ThresholdNextFit",linestyle = "-", color="tab:grey" )
-    axs[0].plot(bs, data[0][1], label = "ThresholdWorstFit",linestyle = (0, (5,2)), color="tab:red" )
-    axs[0].plot(bs, data[0][2], label = "ThresholdFirstFit",linestyle = (1, (8,2,3,2)), color="tab:green" )
-    axs[0].plot(bs, data[0][3], label = "ThresholdBestFit",linestyle = (0, (1,2,4,2,1,2)), color="tab:blue" )
-    axs[0].plot(bs, data[0][4], label = "GreenHarmonic",linestyle = (0, (2,2)), color="tab:purple" )
+    axs[0].plot(bs, data[0][0], label = r"NextFit$_\tau$",linestyle = "-", color="tab:grey" )
+    axs[0].plot(bs, data[0][1], label = r"WorstFit$_\tau$",linestyle = (0, (5,2)), color="tab:red" )
+    axs[0].plot(bs, data[0][2], label = r"FirstFit$_\tau$",linestyle = (1, (8,2,3,2)), color="tab:green" )
+    axs[0].plot(bs, data[0][3], label = r"BestFit$_\tau$",linestyle = (0, (1,2,4,2,1,2)), color="tab:blue" )
+    axs[0].plot(bs, data[0][4], label = r"Harmonic$_\tau$",linestyle = (0, (2,2)), color="tab:purple" )
     axs[0].set_xlabel("\u03B2G", fontsize="12")
     axs[0].set_ylabel("Empirical Competitive Ratio", fontsize="11")
     #axs[0].set_yticks([1.0,1.1,1.2,1.3])
@@ -389,11 +389,11 @@ def multiplot_largeBG(data, bs, filename, share_Y = False):
     
     mpl.rcParams['lines.linewidth'] = 2
     # plot 1
-    axs[0].plot(bs[0], data[0][0], label = "ThresholdNextFit",linestyle = "-", color="tab:grey" )
-    axs[0].plot(bs[0], data[0][1], label = "ThresholdWorstFit",linestyle = (0, (5,2)), color="tab:red" )
-    axs[0].plot(bs[0], data[0][2], label = "ThresholdFirstFit",linestyle = (1, (8,2,3,2)), color="tab:green" )
-    axs[0].plot(bs[0], data[0][3], label = "ThresholdBestFit",linestyle = (0, (1,2,4,2,1,2)), color="tab:blue" )
-    axs[0].plot(bs[0], data[0][4], label = "GreenHarmonic",linestyle = (0, (2,2)), color="tab:purple" )
+    axs[0].plot(bs[0], data[0][0], label = r"NextFit$_\tau$",linestyle = "-", color="tab:grey" )
+    axs[0].plot(bs[0], data[0][1], label = r"WorstFit$_\tau$",linestyle = (0, (5,2)), color="tab:red" )
+    axs[0].plot(bs[0], data[0][2], label = r"FirstFit$_\tau$",linestyle = (1, (8,2,3,2)), color="tab:green" )
+    axs[0].plot(bs[0], data[0][3], label = r"BestFit$_\tau$",linestyle = (0, (1,2,4,2,1,2)), color="tab:blue" )
+    axs[0].plot(bs[0], data[0][4], label = r"Harmonic$_\tau$",linestyle = (0, (2,2)), color="tab:purple" )
     axs[0].set_xlabel("\u03B2G", fontsize="12")
     axs[0].set_ylabel("Empirical Competitive Ratio", fontsize="11")
     #axs[0].set_yticks([1.0,1.1,1.2,1.3])
@@ -431,16 +431,16 @@ def multiplot_largeBG(data, bs, filename, share_Y = False):
     plt.clf()
 
 
-def multiplot_varyThreshold(data, ts, b, tHat):
+def multiplot_varyThreshold(data, ts, b, tHat, filename=""):
     fig, axs = plt.subplots(1, 3, figsize=(10, 3))
     
     mpl.rcParams['lines.linewidth'] = 2
     # plot 1
-    axs[0].plot(ts, data[0][0], label = "ThresholdNextFit",linestyle = "-", color="tab:grey" )
-    axs[0].plot(ts, data[0][1], label = "ThresholdWorstFit",linestyle = (0, (5,2)), color="tab:red" )
-    axs[0].plot(ts, data[0][2], label = "ThresholdFirstFit",linestyle = (1, (8,2,3,2)), color="tab:green" )
-    axs[0].plot(ts, data[0][3], label = "ThresholdBestFit",linestyle = (0, (1,2,4,2,1,2)), color="tab:blue" )
-    axs[0].plot(ts, data[0][4], label = "GreenHarmonic",linestyle = (0, (2,2)), color="tab:purple" )
+    axs[0].plot(ts, data[0][0], label = r"NextFit$_\tau$",linestyle = "-", color="tab:grey" )
+    axs[0].plot(ts, data[0][1], label = r"WorstFit$_\tau$",linestyle = (0, (5,2)), color="tab:red" )
+    axs[0].plot(ts, data[0][2], label = r"FirstFit$_\tau$",linestyle = (1, (8,2,3,2)), color="tab:green" )
+    axs[0].plot(ts, data[0][3], label = r"BestFit$_\tau$",linestyle = (0, (1,2,4,2,1,2)), color="tab:blue" )
+    axs[0].plot(ts, data[0][4], label = r"Harmonic$_\tau$",linestyle = (0, (2,2)), color="tab:purple" )
     axs[0].set_xlabel(r"$\tau$", fontsize="12")
     axs[0].set_ylabel("Cost", fontsize="12")
     axs[0].yaxis.set_major_formatter(ticker.EngFormatter())
@@ -472,9 +472,9 @@ def multiplot_varyThreshold(data, ts, b, tHat):
             axs[i].axvline(x=1/b[i], color = "black", ls='-', lw = 0.5)
             axs[i].axvline(x=1/(2*b[i]), color = "black", ls='-', lw = 0.5)
             axs[i].axvline(x=tHat[i], color = "black", ls='-', lw = 0.5)
-            axs[i].text(1/b[i]+.004, axs[i].get_ylim()[1]*(98-i)/100, r"$\frac{1}{\beta}$", fontsize="12")
-            axs[i].text(1/(2*b[i])+.001, axs[i].get_ylim()[1]*(98-i)/100, r"$\frac{1}{2\beta}$", fontsize="12")
-            axs[i].text(tHat[i]-0.02, axs[i].get_ylim()[1]*(98-i)/100, r'$\hat{\tau}$', fontsize="11")
+            axs[i].text(1/b[i]+.004, axs[i].get_ylim()[1]*(97-3*i)/100, r"$\frac{1}{\beta}$", fontsize="12")
+            axs[i].text(1/(2*b[i])+.001, axs[i].get_ylim()[1]*(97-3*i)/100, r"$\frac{1}{2\beta}$", fontsize="12")
+            axs[i].text(tHat[i]-0.02, axs[i].get_ylim()[1]*(97-3*i)/100, r'$\hat{\tau}$', fontsize="11")
 
     handles, labels = [], []
     for ax in axs.flat:
@@ -485,7 +485,7 @@ def multiplot_varyThreshold(data, ts, b, tHat):
     fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.5, 1), ncol=5, fontsize="10")
 
     plt.tight_layout(rect=[0, 0, 1, 0.9])
-    plt.savefig("./Plots/Simulation/tau_selection/multiplot_unif.png", dpi=300)
+    plt.savefig(f"./Plots/Simulation/tau_selection/{filename}.png", dpi=300)
     plt.clf()
 
 
@@ -528,13 +528,17 @@ def multiplot_hist(data):
 # data1 = empirical_tau(b=10, g=0.5, tMax=0.35, nT=150, nS=3000, plot=False, source = "Unif")
 # data2 = empirical_tau(b=20, g=0.5, tMax=0.35, nT=150, nS=3000, plot=False, source = "Unif")
 # ts = np.linspace(0,0.35,150)
+# with open("./Plots/Simulation/tau_selection/unif.pickle", 'wb') as f:
+#     pickle.dump((data0,data1,data2), f)
 # multiplot_varyThreshold((data0,data1,data2), ts, b=[5,10,20], tHat=[0.06, 0.025,0.01])
 
 # data0 = empirical_tau(b=5, g=0.5, tMax=0.35, nT=150, nS=3000, plot=False, source = "Weibull")
 # data1 = empirical_tau(b=10, g=0.5, tMax=0.35, nT=150, nS=3000, plot=False, source = "Weibull")
 # data2 = empirical_tau(b=20, g=0.5, tMax=0.35, nT=150, nS=3000, plot=False, source = "Weibull")
 # ts = np.linspace(0,0.35,150)
-# multiplot_varyThreshold((data0,data1,data2), ts, b=[5,10,20], tHat=[0.06, 0.025,0.01])
+# with open("./Plots/Simulation/tau_selection/weibull.pickle", 'rb') as f:
+#     data = pickle.load( f)
+# multiplot_varyThreshold(data, ts, b=[5,10,20], tHat=[0.06, 0.025,0.01], filename="multiplot_weibull")
 
 ### Empirical BG <= 1
 #    B = 1, 1.5, 2, 4
@@ -599,72 +603,56 @@ def multiplot_hist(data):
 # empirical_large(g = 0.9, bMax = 20, tauHat = True, smartOpt=True, filename="g0dot9_v8")
 # empirical_large(g = 0.95, bMax = 20, tauHat = True, smartOpt=True, filename="g0dot95_v8")
 
-## Figure 7
-data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 0, ghar_t= 0, twf_t = 0, taaf_t= 0, smartOpt=True, plot=False, source="Unif")
-data1 =  empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False, source="Unif")
-data2 = empirical_large(g = 0.5, bMax = 20, tnf_t= 2, ghar_t= 2, twf_t = 2, taaf_t= 2, smartOpt=True, plot=False, source="Unif")
-bs = 0.5*np.linspace(1.005/0.5,20/0.5, 30)
-multiplot_compareThreshold((data0,data1,data2), bs, "multiplot_unif.png")
+### Compare tau = 0, empirical tau, theoretical tau
+# data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 0, ghar_t= 0, twf_t = 0, taaf_t= 0, smartOpt=True, plot=False, source="Unif")
+# data1 =  empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False, source="Unif")
+# data2 = empirical_large(g = 0.5, bMax = 20, tnf_t= 2, ghar_t= 2, twf_t = 2, taaf_t= 2, smartOpt=True, plot=False, source="Unif")
+# bs = 0.5*np.linspace(1.005/0.5,20/0.5, 30)
+# with open("./Plots/Simulation/compare_threshold/unif.pickle", 'r') as f:
+#     data = pickle.load(f)
+# multiplot_compareThreshold(data, bs, "multiplot_unif.png", share_Y=True)
 
-data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 0, ghar_t= 0, twf_t = 0, taaf_t= 0, smartOpt=True, plot=False, source="Unif")
-data1 =  empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False, source="Unif")
-data2 = empirical_large(g = 0.5, bMax = 20, tnf_t= 2, ghar_t= 2, twf_t = 2, taaf_t= 2, smartOpt=True, plot=False, source="Unif")
-bs = 0.5*np.linspace(1.005/0.5,20/0.5, 30)
-multiplot_compareThreshold((data0,data1,data2), bs, "multiplot_unif2.png", share_Y=True)
+# data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 0, ghar_t= 0, twf_t = 0, taaf_t= 0, smartOpt=True, plot=False, source="Weibull")
+# data1 =  empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False, source="Weibull")
+# data2 = empirical_large(g = 0.5, bMax = 20, tnf_t= 2, ghar_t= 2, twf_t = 2, taaf_t= 2, smartOpt=True, plot=False, source="Weibull")
+# bs = 0.5*np.linspace(1.005/0.5,20/0.5, 30)
+# with open("./Plots/Simulation/compare_threshold/weibull.pickle", 'wb') as f:
+#     pickle.dump((data0,data1,data2), f)
+# multiplot_compareThreshold((data0,data1,data2), bs, "multiplot_weibull.png", share_Y=True)
 
-data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 0, ghar_t= 0, twf_t = 0, taaf_t= 0, smartOpt=True, plot=False, source="Weibull")
-data1 =  empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False, source="Weibull")
-data2 = empirical_large(g = 0.5, bMax = 20, tnf_t= 2, ghar_t= 2, twf_t = 2, taaf_t= 2, smartOpt=True, plot=False, source="Weibull")
-bs = 0.5*np.linspace(1.005/0.5,20/0.5, 30)
-multiplot_compareThreshold((data0,data1,data2), bs, "multiplot_weibull.png")
-
-data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 0, ghar_t= 0, twf_t = 0, taaf_t= 0, smartOpt=True, plot=False, source="Weibull")
-data1 =  empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False, source="Weibull")
-data2 = empirical_large(g = 0.5, bMax = 20, tnf_t= 2, ghar_t= 2, twf_t = 2, taaf_t= 2, smartOpt=True, plot=False, source="Weibull")
-bs = 0.5*np.linspace(1.005/0.5,20/0.5, 30)
-multiplot_compareThreshold((data0,data1,data2), bs, "multiplot_weibull2.png", share_Y=True)
-
+### Sorted all 3 distributions
 # populate_tauHat_file2(gs = [0.5, .75, .95], bMax=20 , nB=30)
 data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, source="Unif", sorted=True, smartOpt=True, plot=False)
 data1 =  empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, source="GI",sorted=True, smartOpt=True, plot=False)
 data2 = empirical_large(g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, source="Weibull",sorted=True, smartOpt=True, plot=False)
 bs = 0.5*np.linspace(1.005/0.5,20/0.5, 30) 
-multiplot_compareThreshold((data0,data1,data2), bs, filename="multiplot_sorted_variety.png")
+with open("./Plots/Simulation/compare_threshold/sorted_variety.pickle", 'wb') as f:
+    pickle.dump((data0,data1,data2), f)
+multiplot_compareThreshold((data0,data1,data2), bs, filename="multiplot_sorted_variety.png", share_Y=True)
 
-# data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False)
-# data1 =  empirical_large( g = 0.75, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t = 0, smartOpt=True, plot=False)
-# data2 = empirical_large(g = 0.95, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False)
+### Empirical plots by distribution
+
+# data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0,source="Unif", smartOpt=True, plot=False)
+# data1 =  empirical_large( g = 0.75, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t = 0,source="Unif", smartOpt=True, plot=False)
+# data2 = empirical_large(g = 0.95, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0,source="Unif", smartOpt=True, plot=False)
+# with open("./Plots/Simulation/largeBG/unif.pickle", 'wb') as f:
+#     pickle.dump((data0,data1,data2), f)
 # bs = [g*np.linspace(1.005/g,20/g, 30) for g in [0.5,.75,.95]]
-# multiplot_largeBG((data0,data1,data2), bs, filename="multiplot_unif.png")
+# multiplot_largeBG((data0,data1,data2), bs, filename="multiplot_unif.png", share_Y=True)
 
-# data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False)
-# data1 =  empirical_large( g = 0.75, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t = 0, smartOpt=True, plot=False)
-# data2 = empirical_large(g = 0.95, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False)
+# data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0,source="GI", smartOpt=True, plot=False)
+# data1 =  empirical_large( g = 0.75, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t = 0,source="GI", smartOpt=True, plot=False)
+# data2 = empirical_large(g = 0.95, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0,source="GI", smartOpt=True, plot=False)
+# with open("./Plots/Simulation/largeBG/GI.pickle", 'wb') as f:
+#     pickle.dump((data0,data1,data2), f)
 # bs = [g*np.linspace(1.005/g,20/g, 30) for g in [0.5,.75,.95]]
-# multiplot_largeBG((data0,data1,data2), bs, filename="multiplot_weibull.png")
+# multiplot_largeBG((data0,data1,data2), bs, filename="multiplot_GI.png", share_Y=True)
 
-# data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False)
-# data1 =  empirical_large( g = 0.75, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t = 0, smartOpt=True, plot=False)
-# data2 = empirical_large(g = 0.95, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False)
+# data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, source="Weibull", smartOpt=True, plot=False)
+# data1 =  empirical_large( g = 0.75, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t = 0, source="Weibull", smartOpt=True, plot=False)
+# data2 = empirical_large(g = 0.95, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, source="Weibull", smartOpt=True, plot=False)
+# with open("./Plots/Simulation/largeBG/weibull.pickle", 'wb') as f:
+#     pickle.dump((data0,data1,data2), f)
 # bs = [g*np.linspace(1.005/g,20/g, 30) for g in [0.5,.75,.95]]
-# multiplot_largeBG((data0,data1,data2), bs, filename="multiplot_GI.png")
-
-
-# data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False)
-# data1 =  empirical_large( g = 0.75, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t = 0, smartOpt=True, plot=False)
-# data2 = empirical_large(g = 0.95, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False)
-# bs = [g*np.linspace(1.005/g,20/g, 30) for g in [0.5,.75,.95]]
-# multiplot_largeBG((data0,data1,data2), bs, filename="multiplot_unif2.png", share_Y=True)
-
-# data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False)
-# data1 =  empirical_large( g = 0.75, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t = 0, smartOpt=True, plot=False)
-# data2 = empirical_large(g = 0.95, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False)
-# bs = [g*np.linspace(1.005/g,20/g, 30) for g in [0.5,.75,.95]]
-# multiplot_largeBG((data0,data1,data2), bs, filename="multiplot_weibull2.png", share_Y=True)
-
-# data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False)
-# data1 =  empirical_large( g = 0.75, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t = 0, smartOpt=True, plot=False)
-# data2 = empirical_large(g = 0.95, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, smartOpt=True, plot=False)
-# bs = [g*np.linspace(1.005/g,20/g, 30) for g in [0.5,.75,.95]]
-# multiplot_largeBG((data0,data1,data2), bs, filename="multiplot_GI2.png", share_Y=True)
+# multiplot_largeBG((data0,data1,data2), bs, filename="multiplot_weibull.png", share_Y=True)
 
