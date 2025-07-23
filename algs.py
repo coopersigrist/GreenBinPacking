@@ -35,77 +35,74 @@ def gaaf_s(arr, g, b):
     else:
         return opt_s(arr, g, b)
     
-def green_next_fit(arr, g, b):
-    curr = 0
-    cost = 1
-    threshold = min(g + (1/b), 1)
-    for item in arr:
-        if curr + item > threshold:
-            cost += max((curr - g), 0)*b + 1
-            curr = item
-        else:
-            curr += item
+# def green_next_fit(arr, g, b):
+#     curr = 0
+#     cost = 1
+#     threshold = min(g + (1/b), 1)
+#     for item in arr:
+#         if curr + item > threshold:
+#             cost += max((curr - g), 0)*b + 1
+#             curr = item
+#         else:
+#             curr += item
     
-    return cost
+#     return cost
 
-def green_worst_fit(arr,g,b):
-    cost = 1
-    bins = [0]
-    threshold = min(g + (1/b), 1)
-    for item in arr:
-        mini = min(bins)
-        if mini + item <= threshold:
-            bins[bins.index(mini)] += item
-        else:
-            cost += 1
-            bins.append(item)
+# def green_worst_fit(arr,g,b):
+#     cost = 1
+#     bins = [0]
+#     threshold = min(g + (1/b), 1)
+#     for item in arr:
+#         mini = min(bins)
+#         if mini + item <= threshold:
+#             bins[bins.index(mini)] += item
+#         else:
+#             cost += 1
+#             bins.append(item)
             
-    for bin in bins:
-        cost += max(bin - g, 0) * b
+#     for bin in bins:
+#         cost += max(bin - g, 0) * b
     
-    return cost
+#     return cost
 
-def green_best_fit(arr,g,b):
-    cost = 1
-    bins = [0]
-    threshold = min(g + (1/b), 1)
-    for item in arr:
-        allowed = list(filter(lambda n: n <= (threshold - item), bins))
-        if len(allowed) == 0:
-            cost += 1
-            bins.append(item)
-        else:
-            bins[bins.index(max(allowed))] += item
+# def green_best_fit(arr,g,b):
+#     cost = 1
+#     bins = [0]
+#     threshold = min(g + (1/b), 1)
+#     for item in arr:
+#         allowed = list(filter(lambda n: n <= (threshold - item), bins))
+#         if len(allowed) == 0:
+#             cost += 1
+#             bins.append(item)
+#         else:
+#             bins[bins.index(max(allowed))] += item
             
-    for bin in bins:
-        cost += max(bin - g, 0) * b
+#     for bin in bins:
+#         cost += max(bin - g, 0) * b
     
-    return cost
+#     return cost
 
-def green_first_fit(arr,g,b):
-    cost = 1
-    bins = [0]
-    threshold = min(g + (1/b), 1)
-    for item in arr:
-        allowed = list(filter(lambda n: n <= (threshold - item), bins))
-        if len(allowed) == 0:
-            cost += 1
-            bins.append(item)
-        else:
-            bins[bins.index(allowed[0])] += item
+# def green_first_fit(arr,g,b):
+#     cost = 1
+#     bins = [0]
+#     threshold = min(g + (1/b), 1)
+#     for item in arr:
+#         allowed = list(filter(lambda n: n <= (threshold - item), bins))
+#         if len(allowed) == 0:
+#             cost += 1
+#             bins.append(item)
+#         else:
+#             bins[bins.index(allowed[0])] += item
             
-    for bin in bins:
-        cost += max(bin - g, 0) * b
+#     for bin in bins:
+#         cost += max(bin - g, 0) * b
     
-    return cost
+#     return cost
 
 def best_fit(arr,g,b, threshold=1):
     cost = 1
     bins = [0]
-    # if g*b <= 1:
-    #     threshold = 1
-    # else:
-    #     threshold = g
+
     for item in arr:
         allowed = list(filter(lambda n: n <= (threshold - item), bins))
         if len(allowed) == 0:

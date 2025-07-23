@@ -66,9 +66,11 @@ def taaf_lb(gb, smooth = False):
 
 def general_lb(gb):
     if gb < 1.5:
+        #return (1.5) + (3-gb)/(2*(1-gb))
         return 3*(gb+1)/(gb+5)
     elif gb < 3:
-        return (4.5*(1+gb/3))/(4+1.5*(1+gb/3))
+        # return (4.5*(1+gb/3))/(4+1.5*(1+gb/3))
+        return 3*(gb+3)/(gb+11)
     elif gb < 4:
         return 9/7
     # elif gb < 5:
@@ -108,4 +110,4 @@ def plot_gen_lb(maxBG):
 # Fig 2a: zoom in
 plot_gen_lb(20)
 # Fig 2b: zoom out
-plot_gen_lb(100)
+# plot_gen_lb(100)

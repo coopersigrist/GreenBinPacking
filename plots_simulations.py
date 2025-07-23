@@ -138,6 +138,7 @@ def empirical_small(b, nG = 30, nS= 3000, source="Unif", filename="", plot=True)
 
 ### Empirical best tau
 # Fix G,B and vary T
+# NOTE - ONLY VALID FOR tMax+G ≤ 1
 def empirical_tau(b,g, tMax, nT, nS, filename="", plot=True, source="Unif"):
     ts = np.linspace(0,tMax,nT)
 
@@ -211,6 +212,7 @@ def empirical_tau(b,g, tMax, nT, nS, filename="", plot=True, source="Unif"):
 # twf_t: threshld for TWF. {0,1,2} indicates 0, 1/2b, 1/b
 # taaf_t, thresholf for TBF and TFF. {0,1,2} indicates 0, tauhat, (1/b, 1/2b). Tauhat requires tauHat2.pickle
 # if filename != "", then save image to that location without preview 
+# NOTE - if G+tau > 1, tau will be capped at 1-G
 def empirical_large(g, bMax = 10, nB=30, nS=3000, source = "Unif", 
                     sorted = False, smartOpt=False, smallItems =False,
                     tnf_t = 1, ghar_t = 1, twf_t = 1, taaf_t = 1, 
@@ -249,30 +251,35 @@ def empirical_large(g, bMax = 10, nB=30, nS=3000, source = "Unif",
         # print("OptLB: "+str(optLB))
 
         #TNF
-        tnf = [0, 1/b, math.sqrt(g/b)][tnf_t]
-        tnfCost.append(next_fit(simulatedData,g,b, g+tnf)/optLB)
+        threshold = [0, 1/b, math.sqrt(g/b)][tnf_t]
+        threshold = min(g+threshold, 1)
+        tnfCost.append(next_fit(simulatedData,g,b, threshold)/optLB)
 
         #GHar
         if ghar_t == 2:
-            ghar = 1/b if g*b < 3.63746 else 1/(2*b)
+            threshold = 1/b if g*b < 3.63746 else 1/(2*b)
         else:
-            ghar = [0, 1/b][ghar_t]
-        gharCost.append(Ghar(simulatedData,g,b,ghar,10)/optLB)
+            threshold = [0, 1/b][ghar_t]
+
+        threshold = min(threshold, 1-g) #threshold for Ghar is tau, for others is G+tau
+        gharCost.append(Ghar(simulatedData,g,b, threshold,10)/optLB)
 
         #TWF
-        twf = [0, 1/(2*b),  1/b][twf_t]
-        twfCost.append(worst_fit(simulatedData,g,b, g+twf)/optLB)
+        threshold = [0, 1/(2*b),  1/b][twf_t]
+        threshold = min(g+threshold, 1)
+        twfCost.append(worst_fit(simulatedData,g,b, threshold)/optLB)
 
         ##TFF,TBF 
         if taaf_t == 2:
-            taaf = 1/b if g*b < 3.63746 else 1/(2*b)
+            threshold = 1/b if g*b < 3.63746 else 1/(2*b)
         elif taaf_t == 0:
-            taaf = 0
+            threshold = 0
         else:
-            taaf =  tauHatData[(g,b)]
+            threshold =  tauHatData[(g,b)]
+        threshold = min(g+threshold, 1)
 
-        tffCost.append(first_fit(simulatedData,g,b, g+taaf)/optLB)
-        tbfCost.append(best_fit(simulatedData,g,b, g+taaf)/optLB)
+        tffCost.append(first_fit(simulatedData,g,b, threshold)/optLB)
+        tbfCost.append(best_fit(simulatedData,g,b, threshold)/optLB)
 
     if plot: 
         bs = g*np.linspace(1.005/g,bMax/g, nB)
@@ -490,7 +497,7 @@ def multiplot_varyThreshold(data, ts, b, tHat, filename=""):
 
 
 def multiplot_hist(data):
-    _, axs = plt.subplots(1, 3, figsize=(10, 3))
+    _, axs = plt.subplots(1, 3, figsize=(10, 3), sharey=True)
 
     axs[0].hist(data[0], bins = 100)
     axs[0].set_ylabel("Count", fontsize="12")
@@ -505,7 +512,7 @@ def multiplot_hist(data):
     axs[2].set_xlabel("Item Size", fontsize="12")
     
     plt.tight_layout(rect=[0, 0.01, 1, 0.9])
-    plt.savefig(f"./Plots/Simulation/multiplot_hist", dpi=300)
+    plt.savefig(f"./Plots/Simulation/multiplot_hist_3k.png", dpi=300)
     plt.clf()
 
 
@@ -514,9 +521,9 @@ def multiplot_hist(data):
 #
 
 ### HISTOGRAM
-# data0 = np.random.random(5000)
-# data1 = read_from_file("./Data/GI.txt", 5000)
-# data2 = read_from_file("./Data/weibull.txt", 5000)
+# data0 = np.random.random(3000)
+# data1 = read_from_file("./Data/GI.txt", 3000)
+# data2 = read_from_file("./Data/weibull.txt", 3000)
 # multiplot_hist((data0,data1,data2))
 
 
@@ -543,23 +550,6 @@ def multiplot_hist(data):
 ### Empirical BG <= 1
 #    B = 1, 1.5, 2, 4
 
-# data0 = empirical_small(b=1, source = "GI", plot=False)
-# data1 = empirical_small(b=1.5, source = "GI", plot=False)
-# data3 = empirical_small(b=4, source = "GI", plot=False)
-# gs = [d*np.linspace(0, 1/d, 30) for d in [1,1.5,4]]
-# multiplot_smallBG((data0,data1,data3),gs, filename="multiplot_GI.png")
-
-# data0 = empirical_small(b=1, source = "Unif", plot=False)
-# data1 = empirical_small(b=1.5, source = "Unif", plot=False)
-# data3 = empirical_small(b=4, source = "Unif", plot=False)
-# gs = [d*np.linspace(0, 1/d, 30) for d in [1,1.5,4]]
-# multiplot_smallBG((data0,data1,data3),gs, filename="multiplot_unif.png")
-
-# data0 = empirical_small(b=1, source = "GI", plot=False)
-# data1 = empirical_small(b=1.5, source = "GI", plot=False)
-# data3 = empirical_small(b=4, source = "GI", plot=False)
-# gs = [d*np.linspace(0, 1/d, 30) for d in [1,1.5,4]]
-# multiplot_smallBG((data0,data1,data3),gs, filename="multiplot_weibull.png")
 
 # data0 = empirical_small(b=1, source = "GI", plot=False)
 # data1 = empirical_small(b=1.5, source = "GI", plot=False)
@@ -573,9 +563,9 @@ def multiplot_hist(data):
 # gs = [d*np.linspace(0, 1/d, 30) for d in [1,1.5,4]]
 # multiplot_smallBG((data0,data1,data3),gs, filename="multiplot_unif2.png", share_Y=True)
 
-# data0 = empirical_small(b=1, source = "GI", plot=False)
-# data1 = empirical_small(b=1.5, source = "GI", plot=False)
-# data3 = empirical_small(b=4, source = "GI", plot=False)
+# data0 = empirical_small(b=1, source = "Weibull", plot=False)
+# data1 = empirical_small(b=1.5, source = "Weibull", plot=False)
+# data3 = empirical_small(b=4, source = "Weibull", plot=False)
 # gs = [d*np.linspace(0, 1/d, 30) for d in [1,1.5,4]]
 # multiplot_smallBG((data0,data1,data3),gs, filename="multiplot_weibull2.png", share_Y=True)
 
@@ -622,13 +612,13 @@ def multiplot_hist(data):
 
 ### Sorted all 3 distributions
 # populate_tauHat_file2(gs = [0.5, .75, .95], bMax=20 , nB=30)
-data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, source="Unif", sorted=True, smartOpt=True, plot=False)
-data1 =  empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, source="GI",sorted=True, smartOpt=True, plot=False)
-data2 = empirical_large(g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, source="Weibull",sorted=True, smartOpt=True, plot=False)
-bs = 0.5*np.linspace(1.005/0.5,20/0.5, 30) 
-with open("./Plots/Simulation/compare_threshold/sorted_variety.pickle", 'wb') as f:
-    pickle.dump((data0,data1,data2), f)
-multiplot_compareThreshold((data0,data1,data2), bs, filename="multiplot_sorted_variety.png", share_Y=True)
+# data0 = empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, source="Unif", sorted=True, smartOpt=True, plot=False)
+# data1 =  empirical_large( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, source="GI",sorted=True, smartOpt=True, plot=False)
+# data2 = empirical_large(g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, source="Weibull",sorted=True, smartOpt=True, plot=False)
+# bs = 0.5*np.linspace(1.005/0.5,20/0.5, 30) 
+# with open("./Plots/Simulation/compare_threshold/sorted_variety.pickle", 'wb') as f:
+#     pickle.dump((data0,data1,data2), f)
+# multiplot_compareThreshold((data0,data1,data2), bs, filename="multiplot_sorted_variety.png", share_Y=True)
 
 ### Empirical plots by distribution
 
@@ -656,3 +646,123 @@ multiplot_compareThreshold((data0,data1,data2), bs, filename="multiplot_sorted_v
 # bs = [g*np.linspace(1.005/g,20/g, 30) for g in [0.5,.75,.95]]
 # multiplot_largeBG((data0,data1,data2), bs, filename="multiplot_weibull.png", share_Y=True)
 
+
+
+# def fix_B(b, nG=30, nS=3000, source = "Unif", 
+#                     sorted = False, smartOpt=False,
+#                     tnf_t = 1, ghar_t = 1, twf_t = 1, taaf_t = 1, 
+#                     plot = True,
+#                     filename=""):
+#     gs = np.linspace(.005,1, nG)
+
+#     if source == "Unif":
+#         simulatedData = np.random.uniform(0, 1, nS)
+#     elif source == "GI":
+#         skip = random.randint(0,1000)
+#         simulatedData = read_from_file("./Data/GI.txt", nS, skip)
+#     elif source == "Weibull":
+#         skip = random.randint(0,10000)
+#         simulatedData = read_from_file("./Data/weibull.txt", nS, skip)
+    
+#     tauHatData = read_tauHat_pickle("2")
+
+#     if sorted:
+#         simulatedData.sort()
+
+#     tnfCost = []
+#     twfCost = []
+#     tffCost = []
+#     tbfCost = []
+#     gharCost = []
+
+#     for g in gs:
+#         if smartOpt:
+#             optLB = opt_smart(simulatedData,g,b)
+#         else:
+#             optLB = opt_s(simulatedData,g,b)
+
+#         # print('b: '+str(b))
+#         # print("OptLB: "+str(optLB))
+
+#         #TNF
+#         threshold = [0, 1/b, math.sqrt(g/b)][tnf_t]
+#         threshold = min(g+threshold, 1)
+#         tnfCost.append(next_fit(simulatedData,g,b, threshold)/optLB)
+
+#         #GHar
+#         if ghar_t == 2:
+#             threshold = 1/b if g*b < 3.63746 else 1/(2*b)
+#         else:
+#             threshold = [0, 1/b][ghar_t]
+
+#         threshold = min(threshold, 1-g) #threshold for Ghar is tau, for others is G+tau
+#         gharCost.append(Ghar(simulatedData,g,b, threshold,10)/optLB)
+
+#         #TWF
+#         threshold = [0, 1/(2*b),  1/b][twf_t]
+#         threshold = min(g+threshold, 1)
+#         twfCost.append(worst_fit(simulatedData,g,b, threshold)/optLB)
+
+#         ##TFF,TBF 
+#         if taaf_t == 2:
+#             threshold = 1/b if g*b < 3.63746 else 1/(2*b)
+#         elif taaf_t == 0:
+#             threshold = 0
+#         else:
+#             threshold =  tauHatData[(g,b)]
+#         threshold = min(g+threshold, 1)
+
+#         tffCost.append(first_fit(simulatedData,g,b, threshold)/optLB)
+#         tbfCost.append(best_fit(simulatedData,g,b, threshold)/optLB)
+
+#     if plot: 
+#         bgs = b*np.linspace(.005/g,1, nG)
+
+#         plt.plot(bgs, tnfCost, label = "NF",linestyle = "-", color="tab:grey")
+#         plt.plot(bgs, twfCost, label = "WF", linestyle = (0, (5,3)), color="tab:red")
+#         plt.plot(bgs, tffCost, label = "FF", linestyle = (3, (10,3,2,3)), color="tab:green")
+#         plt.plot(bgs, tbfCost, label = "BF", linestyle = (0, (10,3,2,3,2,3)), color="tab:blue")
+#         plt.plot(bgs, gharCost, label = "Har", linestyle = (0, (3,3)), color="tab:purple")
+        
+#         plt.legend(fontsize="12")
+#         plt.xlabel("\u03B2G", fontsize="13")
+#         plt.ylabel("Empirical Competitive Ratio", fontsize="11")
+#         plt.subplots_adjust(left = 0.13, right = 0.96, top = 0.95, bottom = 0.1)
+    
+#         if filename == "" :
+#             plt.show()
+#         else:
+#             #plt.savefig(f"./Plots/Simulation/FixG/{source}_GB>1/{filename}", dpi=300)
+#             plt.savefig(f"./Plots/Simulation/compare_threshold/{filename}", dpi=300)
+
+#         plt.clf()
+#         return 
+    
+#     else:
+#         return (tnfCost, twfCost, tffCost, tbfCost, gharCost)
+    
+
+
+# data0 = fix_B(b = 2.5, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0,source="Unif", smartOpt=True, plot=False)
+# data1 =  fix_B(b = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t = 0,source="Unif", smartOpt=True, plot=False)
+# data2 = fix_B( b = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0,source="Unif", smartOpt=True, plot=False)
+# with open("./Plots/Simulation/largeBG/unif.pickle", 'wb') as f:
+#     pickle.dump((data0,data1,data2), f)
+# bs = [g*np.linspace(1.005/g,20/g, 30) for g in [0.5,.75,.95]]
+# multiplot_largeBG((data0,data1,data2), bs, filename="multiplot_unif.png", share_Y=True)
+
+# data0 = fix_B( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0,source="GI", smartOpt=True, plot=False)
+# data1 =  fix_B( g = 0.75, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t = 0,source="GI", smartOpt=True, plot=False)
+# data2 = fix_B(g = 0.95, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0,source="GI", smartOpt=True, plot=False)
+# with open("./Plots/Simulation/largeBG/GI.pickle", 'wb') as f:
+#     pickle.dump((data0,data1,data2), f)
+# bs = [g*np.linspace(1.005/g,20/g, 30) for g in [0.5,.75,.95]]
+# multiplot_largeBG((data0,data1,data2), bs, filename="multiplot_GI.png", share_Y=True)
+
+# data0 = fix_B( g = 0.5, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, source="Weibull", smartOpt=True, plot=False)
+# data1 =  fix_B( g = 0.75, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t = 0, source="Weibull", smartOpt=True, plot=False)
+# data2 = fix_B( g = 0.95, bMax = 20, tnf_t= 1, ghar_t= 1, twf_t = 1, taaf_t= 0, source="Weibull", smartOpt=True, plot=False)
+# with open("./Plots/Simulation/largeBG/weibull.pickle", 'wb') as f:
+#     pickle.dump((data0,data1,data2), f)
+# bs = [g*np.linspace(1.005/g,20/g, 30) for g in [0.5,.75,.95]]
+# multiplot_largeBG((data0,data1,data2), bs, filename="multiplot_weibull.png", share_Y=True)
