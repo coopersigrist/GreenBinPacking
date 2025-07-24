@@ -25,11 +25,14 @@ def aaf_lb(B,G):
     else:
         return (71/42)/(1+B-B*G)
 
-def plot_1(gs, nB):
+def plot_1(gs, nB, plot = True):
     colors = ["red","blue","green","grey","purple"]
     c = 0
 
     plt.figure(figsize=(6.4,4))
+
+    online = []
+    aaf = []
 
     for g in gs:
         bs = np.linspace(1, 1/g, nB)
@@ -41,18 +44,24 @@ def plot_1(gs, nB):
             online_res.append(online_lb(1.54037, b, g))
             aaf_res.append(aaf_lb(b,g))
 
+        online.append(online_res)
+        aaf.append(aaf_res)
 
-        plt.plot(bs, online_res, label=f"Online LB: G = {g}", color = colors[c])
-        plt.plot(bs, aaf_res, label=f"Alg LB: G = {g}", linestyle = '--', color = colors[c])
-        c += 1
+        if plot:
+            plt.plot(bs, online_res, label=f"Online LB: G = {g}", color = colors[c])
+            plt.plot(bs, aaf_res, label=f"Alg LB: G = {g}", linestyle = '--', color = colors[c])
+            c += 1
 
-    plt.legend(fontsize = "12")
-    plt.xlabel("\u03B2", fontsize = "12")
-    plt.ylabel("Lower Bound", fontsize = "12")
-    plt.yticks(np.linspace(1.00, 1.45, 10, True))
-    
-    plt.subplots_adjust(left = 0.13, right = 0.98, top = 0.98, bottom = 0.13)
-    plt.show() 
+    if plot:
+        plt.legend(fontsize = "12")
+        plt.xlabel("\u03B2", fontsize = "12")
+        plt.ylabel("Lower Bound", fontsize = "12")
+        plt.yticks(np.linspace(1.00, 1.45, 10, True))
+        
+        plt.subplots_adjust(left = 0.13, right = 0.98, top = 0.98, bottom = 0.13)
+        plt.show()  
+    else:
+        return online, aaf
 
 
 #
@@ -80,7 +89,7 @@ def general_lb(gb):
     else:
         return 1.5
     
-def plot_gen_lb(maxBG):
+def plot_gen_lb(maxBG, plot = True):
     gbs = np.linspace(1, maxBG, 500)
 
     taaf = []
@@ -89,14 +98,62 @@ def plot_gen_lb(maxBG):
         taaf.append(taaf_lb(gb))
         general.append(general_lb(gb))
 
-    gbs = np.linspace(1, maxBG, 500)
-    plt.plot(gbs, taaf, label = "TAAF/GHAR LB")
-    plt.plot(gbs, general, label = "General LB")
-    plt.xlabel('\u03B2G')
-    plt.ylabel('Competitive Ratio')
-    plt.legend()
-    plt.show()
+    if plot:
+        gbs = np.linspace(1, maxBG, 500)
+        plt.plot(gbs, taaf, label = "TAAF/GHAR LB")
+        plt.plot(gbs, general, label = "General LB")
+        plt.xlabel('\u03B2G')
+        plt.ylabel('Competitive Ratio')
+        plt.legend()
+        plt.show()
+    else:
+        return general, taaf
 
+
+def multiplot_LB(data):
+    _, axs = plt.subplots(1, 4, figsize=(10, 3))
+    legend_fontsize = "9"
+
+    axs[0].plot(data[0][0][0], label =  "Online LB: G = 0.1", linestyle = (0,(1,1)), color = "tab:grey" )
+    axs[0].plot(data[0][0][1], label =  "Online LB: G = 0.2", linestyle = (0,(2,1)), color = "tab:red" )
+    axs[0].plot(data[0][0][2], label =  "Online LB: G = 0.3", linestyle = (0,(3,1)), color = "tab:blue" )
+    axs[0].plot(data[0][0][3], label =  "Online LB: G = 0.4", linestyle = (0,(4,1)), color = "tab:green" )
+    axs[0].plot(data[0][0][4], label =  "Online LB: G = 0.5", linestyle = (0,(5,1)), color = "tab:purple" )
+    axs[0].plot(data[0][1][0], label =  "AAF LB: G = 0.1", color = "tab:grey" )
+    axs[0].plot(data[0][1][1], label =  "AAF LB: G = 0.2", color = "tab:red" )
+    axs[0].plot(data[0][1][2], label =  "AAF LB: G = 0.3", color = "tab:blue" )
+    axs[0].plot(data[0][1][3], label =  "AAF LB: G = 0.4", color = "tab:green" )
+    axs[0].plot(data[0][1][4], label =  "AAF LB: G = 0.5", color = "tab:purple" )
+    axs[0].set_ylabel("Competitive Ratio", fontsize="12")
+    axs[0].set_xlabel("\u03B2G",fontsize="12")
+    axs[0].set_yticks((1.0,1.1, 1.2, 1.3, 1.4))
+    axs[0].legend(fontsize = legend_fontsize)
+
+    axs[1].plot(data[1][0][0], label =  "Online LB: G = 0.1", linestyle = (0,(1,1)), color = "tab:grey" )
+    axs[1].plot(data[1][0][1], label =  "Online LB: G = 0.2", linestyle = (0,(2,1)), color = "tab:red" )
+    axs[1].plot(data[1][0][2], label =  "Online LB: G = 0.3", linestyle = (0,(3,1)), color = "tab:blue" )
+    axs[1].plot(data[1][1][0], label =  "AAF LB: G = 0.1", color = "tab:grey" )
+    axs[1].plot(data[1][1][1], label =  "AAF LB: G = 0.2", color = "tab:red" )
+    axs[1].plot(data[1][1][2], label =  "AAF LB: G = 0.3", color = "tab:blue" )
+    axs[1].set_xlabel("\u03B2G", fontsize="12")
+    axs[1].set_yticks((1.0,1.1, 1.2, 1.3, 1.4))
+    axs[1].legend(fontsize = legend_fontsize)
+
+    axs[2].plot(data[2][0], label =  "Online LB", linestyle = (0,(1,1)), color = "tab:grey")
+    axs[2].plot(data[2][1], label =  "TAAF LB", color = "tab:red")
+    axs[2].set_xlabel("\u03B2G", fontsize="12")
+    axs[2].set_yticks((1.0, 1.25, 1.5, 1.75))
+    axs[2].legend(fontsize = legend_fontsize)
+
+    axs[3].plot(data[3][0], label =  "Online LB", linestyle = (0,(1,1)), color = "tab:grey")
+    axs[3].plot(data[3][1], label =  "TAAF LB", color = "tab:red")
+    axs[3].set_xlabel("\u03B2G", fontsize="12")
+    axs[3].set_yticks((1.0, 1.25, 1.5, 1.75))
+    axs[3].legend(fontsize = legend_fontsize)
+    
+    plt.tight_layout(rect=[0, 0.01, 1, 0.9])
+    plt.savefig(f"./Plots/Simulation/multiplot_generalLB.png", dpi=300)
+    plt.clf()
 
 # 
 # Function calls
@@ -108,6 +165,12 @@ def plot_gen_lb(maxBG):
 #plot_1([0.6,0.7,0.8], 1000)
 
 # Fig 2a: zoom in
-plot_gen_lb(20)
+# plot_gen_lb(20)
 # Fig 2b: zoom out
 # plot_gen_lb(100)
+
+data0 = plot_1([0.1,0.2,0.3,0.4,0.5], 1000, plot = False)
+data1 = plot_1([0.6,0.7,0.8], 1000, plot = False)
+data2 = plot_gen_lb(5,False)
+data3 = plot_gen_lb(100,False)
+multiplot_LB((data0,data1,data2,data3))
